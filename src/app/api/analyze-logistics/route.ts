@@ -3,7 +3,7 @@ import { readExcelFile, parseLogisticsData, parseSalesData, cleanAndValidateData
 import { analyzeLogisticsData } from '@/lib/logistics-analyzer';
 import { AnalysisResponse } from '@/types/logistics';
 
-export const maxDuration = 300; // 5분 타임아웃
+export const maxDuration = 60; // 60초 타임아웃 (Vercel hobby 플랜 최대값)
 
 export async function POST(request: NextRequest) {
   try {
