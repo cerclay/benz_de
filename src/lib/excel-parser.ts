@@ -3,9 +3,9 @@ import { LogisticsData, SalesData, ExcelParsingOptions } from '@/types/logistics
 
 // Excel 파일 유효성 검사
 export const validateExcelFile = (file: File): { valid: boolean; error?: string } => {
-  // 파일 크기 검사 (50MB 제한)
-  if (file.size > 50 * 1024 * 1024) {
-    return { valid: false, error: '파일이 너무 큽니다. 50MB 이하의 파일을 업로드해주세요.' };
+  // 파일 크기 검사 (10MB 제한)
+  if (file.size > 10 * 1024 * 1024) {
+    return { valid: false, error: '파일이 너무 큽니다. 10MB 이하의 파일을 업로드해주세요.' };
   }
 
   // 파일 형식 검사

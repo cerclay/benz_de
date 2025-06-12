@@ -153,7 +153,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 
                 {!file && !error && (
                   <p className="text-xs text-gray-500 mt-1">
-                    지원 형식: .xlsx, .xls, .xlsb, .xlsm (최대 50MB)
+                    지원 형식: .xlsx, .xls, .xlsb, .xlsm (최대 10MB)
                   </p>
                 )}
               </div>

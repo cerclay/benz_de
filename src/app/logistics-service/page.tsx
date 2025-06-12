@@ -107,13 +107,26 @@ export default function LogisticsServicePage() {
         progress: 60
       });
 
+      // 타임아웃 설정 (55초)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 55000);
+
       const response = await fetch('/api/analyze-logistics', {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error(`서버 오류: ${response.status}`);
+        if (response.status === 504) {
+          throw new Error('처리 시간이 초과되었습니다. 파일 크기를 줄이거나 나누어서 업로드해주세요.');
+        } else if (response.status === 413) {
+          throw new Error('파일이 너무 큽니다. 10MB 이하의 파일을 업로드해주세요.');
+        } else {
+          throw new Error(`서버 오류 (${response.status}): 잠시 후 다시 시도해주세요.`);
+        }
       }
 
       const result: AnalysisResponse = await response.json();
@@ -149,9 +162,19 @@ export default function LogisticsServicePage() {
     } catch (error) {
       console.error('분석 오류:', error);
       
+      let errorMessage = '알 수 없는 오류가 발생했습니다.';
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = '요청이 취소되었습니다. 파일이 너무 크거나 처리 시간이 오래 걸립니다.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       setAnalysisProgress({
         step: 'error',
-        message: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
+        message: errorMessage,
         progress: 0
       });
 
