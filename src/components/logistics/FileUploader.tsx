@@ -87,88 +87,89 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
   const getStatusIcon = () => {
     if (error) {
-      return <AlertCircle className="h-5 w-5 text-red-500" />;
+      return <AlertCircle className="h-8 w-8 text-red-500" />;
     }
     if (uploaded && file) {
-      return <CheckCircle className="h-5 w-5 text-green-500" />;
+      return <CheckCircle className="h-8 w-8 text-green-500" />;
     }
     if (file) {
-      return <FileText className="h-5 w-5 text-blue-500" />;
+      return <FileText className="h-8 w-8 text-blue-500" />;
     }
-    return <Upload className="h-5 w-5 text-gray-400" />;
+    return <Upload className="h-8 w-8 text-gray-400" />;
   };
 
   const getStatusText = () => {
     if (error) return error;
     if (uploaded && file) return '업로드 완료';
-    if (file) return `선택된 파일: ${file.name}`;
-    return 'Excel 파일을 선택하거나 드래그해주세요';
+    if (file) return `${file.name}`;
+    return '';
   };
 
   return (
     <Card className={cn(
-      'transition-all duration-200',
-      isDragOver && !disabled && 'ring-2 ring-blue-500 ring-offset-2',
-      disabled && 'opacity-50 cursor-not-allowed'
+      'transition-all duration-300 hover:shadow-lg border-2',
+      isDragOver && !disabled && 'ring-2 ring-blue-500 ring-offset-2 border-blue-300',
+      disabled && 'opacity-50 cursor-not-allowed',
+      error && 'border-red-300 bg-red-50',
+      uploaded && file && 'border-green-300 bg-green-50',
+      !error && !file && 'border-gray-200 hover:border-gray-300'
     )}>
-      <CardContent className="p-6">
-        <div className="space-y-4">
+      <CardContent className="p-8">
+        <div className="space-y-6">
           {/* 제목 및 설명 */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-600 mt-1">{description}</p>
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
 
           {/* 파일 업로드 영역 */}
           <div
             className={cn(
-              'border-2 border-dashed rounded-lg p-8 text-center transition-colors',
+              'border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300',
               isDragOver && !disabled 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-300 hover:border-gray-400',
+                ? 'border-blue-400 bg-blue-50 scale-105' 
+                : 'border-gray-300',
               disabled && 'cursor-not-allowed',
               error && 'border-red-300 bg-red-50',
-              uploaded && file && 'border-green-300 bg-green-50'
+              uploaded && file && 'border-green-300 bg-green-50',
+              !error && !file && 'hover:border-gray-400 hover:bg-gray-50'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* 아이콘 */}
               <div className="flex justify-center">
                 {getStatusIcon()}
               </div>
 
               {/* 상태 텍스트 */}
-              <div>
-                <p className={cn(
-                  'text-sm font-medium',
-                  error ? 'text-red-600' : 
-                  uploaded && file ? 'text-green-600' :
-                  file ? 'text-blue-600' : 'text-gray-600'
-                )}>
-                  {getStatusText()}
-                </p>
-                
-                {!file && !error && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    지원 형식: .xlsx, .xls, .xlsb, .xlsm (최대 10MB)
+              {getStatusText() && (
+                <div>
+                  <p className={cn(
+                    'text-base font-medium',
+                    error ? 'text-red-600' : 
+                    uploaded && file ? 'text-green-600' :
+                    file ? 'text-blue-600' : 'text-gray-600'
+                  )}>
+                    {getStatusText()}
                   </p>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* 파일 정보 */}
               {file && (
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-                  <span>{file.name}</span>
-                  <span>({(file.size / 1024 / 1024).toFixed(2)}MB)</span>
+                <div className="flex items-center justify-center space-x-3 text-sm text-gray-600 bg-white rounded-lg p-3 border">
+                  <FileText className="h-4 w-4" />
+                  <span className="font-medium">{file.name}</span>
+                  <span className="text-gray-400">({(file.size / 1024 / 1024).toFixed(2)}MB)</span>
                   {!disabled && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleRemoveFile}
-                      className="h-6 w-6 p-0 hover:bg-red-100"
+                      className="h-6 w-6 p-0 hover:bg-red-100 ml-2"
                     >
                       <X className="h-4 w-4 text-red-500" />
                     </Button>
@@ -190,33 +191,17 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                   <label
                     htmlFor={`file-input-${title.replace(/\s+/g, '-').toLowerCase()}`}
                     className={cn(
-                      'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors',
-                      disabled && 'opacity-50 cursor-not-allowed hover:bg-blue-600'
+                      'inline-flex items-center px-8 py-4 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
+                      disabled && 'opacity-50 cursor-not-allowed hover:from-blue-600 hover:to-blue-700 transform-none'
                     )}
                   >
-                    <Upload className="h-4 w-4 mr-2" />
+                    <Upload className="h-5 w-5 mr-3" />
                     파일 선택
                   </label>
                 </div>
               )}
             </div>
           </div>
-
-          {/* 에러 메시지 */}
-          {error && (
-            <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
-              <AlertCircle className="h-4 w-4" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* 성공 메시지 */}
-          {uploaded && file && !error && (
-            <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-3 rounded-md">
-              <CheckCircle className="h-4 w-4" />
-              <span>파일이 성공적으로 업로드되었습니다.</span>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>

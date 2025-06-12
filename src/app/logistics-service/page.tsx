@@ -208,11 +208,11 @@ export default function LogisticsServicePage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">로딩 중...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600 text-lg">로딩 중...</p>
           </div>
         </div>
       </div>
@@ -220,26 +220,38 @@ export default function LogisticsServicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 헤더 */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-4">
-            <Truck className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">물류서비스 조회 (차량대기 분석)</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* 헤더 섹션 */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div className="p-3 bg-blue-100 rounded-2xl">
+                <Truck className="h-10 w-10 text-blue-600" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900">물류서비스 조회</h1>
+            </div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              물류 및 판매 데이터를 업로드하여 차량 대기 현황을 실시간으로 분석합니다
+            </p>
           </div>
-          <p className="text-lg text-gray-600">
-            물류 및 판매 데이터를 업로드하여 차량 대기 현황을 실시간으로 분석합니다.
-          </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* 메인 컨텐츠 */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* 파일 업로드 섹션 */}
-          <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-              <BarChart3 className="h-5 w-5 mr-2" />
-              파일 업로드
-            </h2>
+          <div className="space-y-8">
+            <div className="text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start space-x-3 mb-4">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <BarChart3 className="h-6 w-6 text-blue-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">파일 업로드</h2>
+              </div>
+              <p className="text-gray-600">Excel 파일을 업로드하여 분석을 시작하세요</p>
+            </div>
 
             {/* 물류 파일 업로드 */}
             <FileUploader
@@ -266,14 +278,14 @@ export default function LogisticsServicePage() {
             />
 
             {/* 분석 버튼 */}
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button
                 onClick={handleStartAnalysis}
                 disabled={!canStartAnalysis}
-                className="flex-1 py-3 text-base font-medium"
+                className="flex-1 py-4 text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 size="lg"
               >
-                <BarChart3 className="h-5 w-5 mr-2" />
+                <BarChart3 className="h-6 w-6 mr-3" />
                 분석 시작
               </Button>
 
@@ -282,17 +294,30 @@ export default function LogisticsServicePage() {
                   onClick={handleReset}
                   variant="outline"
                   size="lg"
-                  className="py-3"
+                  className="py-4 text-lg font-semibold border-2 hover:bg-gray-50 transition-all duration-300"
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                  <RefreshCw className="h-5 w-5 mr-2" />
                   다시 시작
                 </Button>
               )}
             </div>
+
+            {/* 파일 형식 안내 */}
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+              <h3 className="text-sm font-semibold text-blue-900 mb-2">지원 파일 형식</h3>
+              <div className="flex flex-wrap gap-2">
+                {['.xlsx', '.xls', '.xlsb', '.xlsm'].map((format) => (
+                  <span key={format} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                    {format}
+                  </span>
+                ))}
+              </div>
+              <p className="text-blue-700 text-sm mt-3">최대 파일 크기: 10MB</p>
+            </div>
           </div>
 
           {/* 분석 진행 상황 섹션 */}
-          <div>
+          <div className="lg:pl-8">
             <AnalysisProgress progress={analysisProgress} />
           </div>
         </div>
