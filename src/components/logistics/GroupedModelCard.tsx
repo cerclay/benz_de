@@ -124,7 +124,7 @@ export function GroupedModelCard({ modelGroup, index }: GroupedModelCardProps) {
               </div>
               {/* 전체 모델의 담당 영업사원 목록 */}
               {(() => {
-                const allSalesmen = new Set();
+                const allSalesmen = new Set<string>();
                 colorGroups
                   .flatMap(cg => cg.items)
                   .filter(item => item.pending_unassigned > 0 && item.salesmen)
@@ -207,7 +207,7 @@ export function GroupedModelCard({ modelGroup, index }: GroupedModelCardProps) {
                           <p className="font-bold text-green-900">{colorGroup.pendingUnassigned}</p>
                           {/* 담당 영업사원 목록 표시 */}
                           {(() => {
-                            const salesmenSet = new Set();
+                            const salesmenSet = new Set<string>();
                             colorGroup.items
                               .filter(item => item.pending_unassigned > 0 && item.salesmen)
                               .forEach(item => {
