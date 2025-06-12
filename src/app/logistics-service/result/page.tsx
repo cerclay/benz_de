@@ -270,7 +270,9 @@ export default function ResultPage() {
 
   // 필터된 데이터 내보내기
   const handleExportFiltered = () => {
-    const result = exportFilteredData(filteredModelData, activeTab);
+    // groupedModelData에서 모든 variants를 평면화
+    const flattenedData = groupedModelData.flatMap(group => group.variants);
+    const result = exportFilteredData(flattenedData, activeTab);
     if (result.success) {
       toast({
         title: "내보내기 완료",
@@ -287,7 +289,9 @@ export default function ResultPage() {
 
   // CSV 내보내기
   const handleExportCSV = () => {
-    const result = exportToCSV(filteredModelData);
+    // groupedModelData에서 모든 variants를 평면화
+    const flattenedData = groupedModelData.flatMap(group => group.variants);
+    const result = exportToCSV(flattenedData);
     if (result.success) {
       toast({
         title: "내보내기 완료",
