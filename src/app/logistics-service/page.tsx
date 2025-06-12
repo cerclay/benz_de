@@ -107,17 +107,11 @@ export default function LogisticsServicePage() {
         progress: 60
       });
 
-      // 타임아웃 설정 (55초)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 55000);
-
+      // API 요청 (서버 측 타임아웃에 의존)
       const response = await fetch('/api/analyze-logistics', {
         method: 'POST',
-        body: formData,
-        signal: controller.signal
+        body: formData
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         if (response.status === 504) {
@@ -165,8 +159,10 @@ export default function LogisticsServicePage() {
       let errorMessage = '알 수 없는 오류가 발생했습니다.';
       
       if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          errorMessage = '요청이 취소되었습니다. 파일이 너무 크거나 처리 시간이 오래 걸립니다.';
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          errorMessage = '네트워크 연결에 문제가 있습니다. 인터넷 연결을 확인하고 다시 시도해주세요.';
+        } else if (error.message.includes('timeout') || error.message.includes('시간이 초과')) {
+          errorMessage = '처리 시간이 초과되었습니다. 파일 크기를 줄이거나 나누어서 업로드해주세요.';
         } else {
           errorMessage = error.message;
         }
